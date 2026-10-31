@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { HiOutlineMail, HiOutlineLockClosed } from 'react-icons/hi';
-import { useAuth } from '../context/useAuth';
-import AuthLayout from '../components/AuthLayout';
-import FormField, { PasswordToggle } from '../components/FormField';
-import { HOME_BY_ROLE } from '../utils/roles';
+import { useAuth } from '../../context/useAuth';
+import AuthLayout from '../../components/AuthLayout';
+import FormField, { PasswordToggle } from '../../components/FormField';
+import { HOME_BY_ROLE } from '../../utils/roles';
 
 const Login = () => {
   const navigate = useNavigate();

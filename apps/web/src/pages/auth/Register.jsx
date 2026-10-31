@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { HiOutlineUser, HiOutlineMail, HiOutlinePhone, HiOutlineLockClosed } from 'react-icons/hi';
-import { useAuth } from '../context/useAuth';
-import AuthLayout from '../components/AuthLayout';
-import FormField, { PasswordToggle } from '../components/FormField';
-import api from '../services/api';
+import { useAuth } from '../../context/useAuth';
+import AuthLayout from '../../components/AuthLayout';
+import FormField, { PasswordToggle } from '../../components/FormField';
+import api from '../../services/api';
 
 const Register = () => {
   const navigate = useNavigate();

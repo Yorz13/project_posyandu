@@ -1,10 +1,11 @@
-import DashboardRingkasan from '../../components/DashboardRingkasan';
+import React from 'react'
 
-export default function DashboardAdmin() {
+const DashboardAdmin = () => {
   return (
-    <DashboardRingkasan
-      title="Dashboard Admin"
-      description="Pantau ringkasan data Posyandu RW 08."
-    />
-  );
+    <div>
+      DashboardAdmin
+    </div>
+  )
 }
+
+export default DashboardAdmin

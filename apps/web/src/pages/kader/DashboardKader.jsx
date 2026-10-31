@@ -1,10 +1,11 @@
-import DashboardRingkasan from '../../components/DashboardRingkasan';
+import React from 'react'
 
-export default function DashboardKader() {
+const DashboardKader = () => {
   return (
-    <DashboardRingkasan
-      title="Dashboard Kader"
-      description="Pantau ringkasan layanan dan data Posyandu."
-    />
-  );
+    <div>
+      DashboardKader
+    </div>
+  )
 }
+
+export default DashboardKader

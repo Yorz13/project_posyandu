@@ -10,11 +10,9 @@ import {
   HiOutlinePhotograph,
   HiOutlinePhone,
   HiOutlineLogin,
-  HiOutlineLogout,
 } from 'react-icons/hi';
-import { useAuth } from '../context/useAuth';
 
-// Menggabungkan semua daftar menu yang ada di lokal dan dari GitHub
+// Daftar menu tampilan umum (sebelum login)
 const menuItems = [
   { label: 'Beranda', href: '/', icon: HiOutlineHome },
   { label: 'Layanan', href: '/layanan', icon: HiOutlineClipboardList },
@@ -27,7 +25,6 @@ const menuItems = [
 const Navbar = () => {
   const [openPath, setOpenPath] = useState(null);
   const [scrolled, setScrolled] = useState(false);
-  const { isAuthenticated, logout } = useAuth();
   const location = useLocation();
   const isOpen = openPath === location.pathname;
 
@@ -99,24 +96,13 @@ const Navbar = () => {
 
             <span className="mx-3 h-6 w-px bg-slate-200" aria-hidden="true" />
 
-            {isAuthenticated ? (
-              <button
-                type="button"
-                onClick={logout}
-                className="inline-flex items-center gap-2 rounded-full border border-slate-300 px-5 py-2 text-sm font-semibold text-slate-700 transition-colors duration-200 hover:border-red-300 hover:bg-red-50 hover:text-red-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400"
-              >
-                <HiOutlineLogout className="h-4 w-4" />
-                Keluar
-              </button>
-            ) : (
-              <NavLink
-                to="/login"
-                className="inline-flex items-center gap-2 rounded-full bg-teal-600 px-5 py-2 text-sm font-semibold text-white shadow-sm transition-colors duration-200 hover:bg-teal-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2"
-              >
-                <HiOutlineLogin className="h-4 w-4" />
-                Login
-              </NavLink>
-            )}
+            <NavLink
+              to="/login"
+              className="inline-flex items-center gap-2 rounded-full bg-teal-600 px-5 py-2 text-sm font-semibold text-white shadow-sm transition-colors duration-200 hover:bg-teal-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2"
+            >
+              <HiOutlineLogin className="h-4 w-4" />
+              Login
+            </NavLink>
           </div>
 
           {/* Tombol menu mobile */}
@@ -149,27 +135,13 @@ const Navbar = () => {
               ))}
 
               <div className="mt-2 border-t border-slate-200 pt-3">
-                {isAuthenticated ? (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      logout();
-                      setOpenPath(null);
-                    }}
-                    className="flex w-full items-center justify-center gap-2 rounded-xl border border-slate-300 px-4 py-3 text-base font-semibold text-slate-700 transition-colors hover:border-red-300 hover:bg-red-50 hover:text-red-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400"
-                  >
-                    <HiOutlineLogout className="h-5 w-5" />
-                    Keluar
-                  </button>
-                ) : (
-                  <NavLink
-                    to="/login"
-                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-teal-600 px-4 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-teal-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
-                  >
-                    <HiOutlineLogin className="h-5 w-5" />
-                    Login
-                  </NavLink>
-                )}
+                <NavLink
+                  to="/login"
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-teal-600 px-4 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-teal-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
+                >
+                  <HiOutlineLogin className="h-5 w-5" />
+                  Login
+                </NavLink>
               </div>
             </div>
           </div>
