@@ -1,11 +1,15 @@
-const { PrismaClient } = require("@prisma/client");
-const bcrypt = require("bcryptjs");
+import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 const tanggal = (str) => new Date(`${str}T00:00:00.000Z`);
 
 async function main() {
+  if (process.env.NODE_ENV === "production") {
+    throw new Error("Seed data contoh tidak boleh dijalankan di production.");
+  }
+
   console.log("🌱 Mulai seeding...");
 
   // ---------------------------------------------------
@@ -47,45 +51,45 @@ async function main() {
   // ---------------------------------------------------
   const passwordHash = await bcrypt.hash("password123", 10);
 
-  await prisma.user.upsert({
-    where: { email: "admin@posyandu.test" },
-    update: {},
-    create: {
-      nama: "Admin Puskesmas",
-      email: "admin@posyandu.test",
-      password: passwordHash,
-      telepon: "081200000001",
-      role: "ADMIN",
-      puskesmasId: puskesmas.id,
-    },
-  });
-
-  const kader = await prisma.user.upsert({
-    where: { email: "kader@posyandu.test" },
-    update: {},
-    create: {
-      nama: "Kader Melati",
-      email: "kader@posyandu.test",
-      password: passwordHash,
-      telepon: "081200000002",
-      role: "KADER",
-      posyanduId: posyandu.id,
-      puskesmasId: puskesmas.id,
-    },
-  });
-
-  await prisma.user.upsert({
-    where: { email: "warga@posyandu.test" },
-    update: {},
-    create: {
-      nama: "Warga Contoh",
-      email: "warga@posyandu.test",
-      password: passwordHash,
-      telepon: "081200000003",
-      role: "Masyarakat",
-      posyanduId: posyandu.id,
-    },
-  });
+  const [, kader] = await Promise.all([
+    prisma.user.upsert({
+      where: { email: "admin@posyandu.test" },
+      update: {},
+      create: {
+        nama: "Admin Puskesmas",
+        email: "admin@posyandu.test",
+        password: passwordHash,
+        telepon: "081200000001",
+        role: "ADMIN",
+        puskesmasId: puskesmas.id,
+      },
+    }),
+    prisma.user.upsert({
+      where: { email: "kader@posyandu.test" },
+      update: {},
+      create: {
+        nama: "Kader Melati",
+        email: "kader@posyandu.test",
+        password: passwordHash,
+        telepon: "081200000002",
+        role: "KADER",
+        posyanduId: posyandu.id,
+        puskesmasId: puskesmas.id,
+      },
+    }),
+    prisma.user.upsert({
+      where: { email: "warga@posyandu.test" },
+      update: {},
+      create: {
+        nama: "Warga Contoh",
+        email: "warga@posyandu.test",
+        password: passwordHash,
+        telepon: "081200000003",
+        role: "Masyarakat",
+        posyanduId: posyandu.id,
+      },
+    }),
+  ]);
 
   // ---------------------------------------------------
   // 4. MASTER VAKSIN
@@ -105,14 +109,18 @@ async function main() {
     { kode: "CAMPAK-LANJUTAN", nama: "Campak / MR Lanjutan", umurAnjuranBulan: 18, jumlahDosis: 1 },
   ];
 
-  const vaksinMap = {};
-  for (const v of daftarVaksin) {
-    vaksinMap[v.kode] = await prisma.vaksin.upsert({
-      where: { kode: v.kode },
-      update: {},
-      create: v,
-    });
+  await prisma.vaksin.createMany({
+    data: daftarVaksin,
+    skipDuplicates: true,
+  });
+  const vaksinList = await prisma.vaksin.findMany({
+    where: { kode: { in: daftarVaksin.map(({ kode }) => kode) } },
+    select: { id: true, kode: true },
+  });
+  if (vaksinList.length !== daftarVaksin.length) {
+    throw new Error("Tidak semua data vaksin contoh berhasil tersedia setelah seeding.");
   }
+  const vaksinMap = Object.fromEntries(vaksinList.map(({ kode, id }) => [kode, { id }]));
 
   // ---------------------------------------------------
   // 5. KELUARGA & WARGA
@@ -130,69 +138,68 @@ async function main() {
     },
   });
 
-  const ayah = await prisma.warga.upsert({
-    where: { nik: "3201000000000011" },
-    update: {},
-    create: {
-      nik: "3201000000000011",
-      nama: "Budi Santoso",
-      tempatLahir: "Sukabumi",
-      tanggalLahir: tanggal("1990-03-12"),
-      jenisKelamin: "LAKI_LAKI",
-      golonganDarah: "O",
-      hubungan: "KEPALA_KELUARGA",
-      posyanduId: posyandu.id,
-      keluargaId: keluarga.id,
-    },
-  });
-
-  const ibu = await prisma.warga.upsert({
-    where: { nik: "3201000000000012" },
-    update: {},
-    create: {
-      nik: "3201000000000012",
-      nama: "Siti Aminah",
-      tempatLahir: "Sukabumi",
-      tanggalLahir: tanggal("1993-07-21"),
-      jenisKelamin: "PEREMPUAN",
-      golonganDarah: "A",
-      hubungan: "ISTRI",
-      telepon: "081200000010",
-      posyanduId: posyandu.id,
-      keluargaId: keluarga.id,
-    },
-  });
-
-  const anak = await prisma.warga.upsert({
-    where: { nik: "3201000000000013" },
-    update: {},
-    create: {
-      nik: "3201000000000013",
-      nama: "Rafi Santoso",
-      tempatLahir: "Sukabumi",
-      tanggalLahir: tanggal("2026-02-10"),
-      jenisKelamin: "LAKI_LAKI",
-      hubungan: "ANAK",
-      posyanduId: posyandu.id,
-      keluargaId: keluarga.id,
-    },
-  });
-
-  const lansia = await prisma.warga.upsert({
-    where: { nik: "3201000000000014" },
-    update: {},
-    create: {
-      nik: "3201000000000014",
-      nama: "Hj. Rohmah",
-      tempatLahir: "Sukabumi",
-      tanggalLahir: tanggal("1958-11-02"),
-      jenisKelamin: "PEREMPUAN",
-      golonganDarah: "B",
-      hubungan: "ORANG_TUA",
-      posyanduId: posyandu.id,
-      keluargaId: keluarga.id,
-    },
-  });
+  const [, ibu, anak, lansia] = await Promise.all([
+    prisma.warga.upsert({
+      where: { nik: "3201000000000011" },
+      update: {},
+      create: {
+        nik: "3201000000000011",
+        nama: "Budi Santoso",
+        tempatLahir: "Sukabumi",
+        tanggalLahir: tanggal("1990-03-12"),
+        jenisKelamin: "LAKI_LAKI",
+        golonganDarah: "O",
+        hubungan: "KEPALA_KELUARGA",
+        posyanduId: posyandu.id,
+        keluargaId: keluarga.id,
+      },
+    }),
+    prisma.warga.upsert({
+      where: { nik: "3201000000000012" },
+      update: {},
+      create: {
+        nik: "3201000000000012",
+        nama: "Siti Aminah",
+        tempatLahir: "Sukabumi",
+        tanggalLahir: tanggal("1993-07-21"),
+        jenisKelamin: "PEREMPUAN",
+        golonganDarah: "A",
+        hubungan: "ISTRI",
+        telepon: "081200000010",
+        posyanduId: posyandu.id,
+        keluargaId: keluarga.id,
+      },
+    }),
+    prisma.warga.upsert({
+      where: { nik: "3201000000000013" },
+      update: {},
+      create: {
+        nik: "3201000000000013",
+        nama: "Rafi Santoso",
+        tempatLahir: "Sukabumi",
+        tanggalLahir: tanggal("2026-02-10"),
+        jenisKelamin: "LAKI_LAKI",
+        hubungan: "ANAK",
+        posyanduId: posyandu.id,
+        keluargaId: keluarga.id,
+      },
+    }),
+    prisma.warga.upsert({
+      where: { nik: "3201000000000014" },
+      update: {},
+      create: {
+        nik: "3201000000000014",
+        nama: "Hj. Rohmah",
+        tempatLahir: "Sukabumi",
+        tanggalLahir: tanggal("1958-11-02"),
+        jenisKelamin: "PEREMPUAN",
+        golonganDarah: "B",
+        hubungan: "ORANG_TUA",
+        posyanduId: posyandu.id,
+        keluargaId: keluarga.id,
+      },
+    }),
+  ]);
 
   // ---------------------------------------------------
   // 6. PROFIL BALITA
@@ -210,6 +217,10 @@ async function main() {
       wargaId: anak.id,
       ibuId: ibu.id,
     },
+  });
+  await prisma.user.update({
+    where: { email: "warga@posyandu.test" },
+    data: { wargaId: ibu.id },
   });
 
   // ---------------------------------------------------
@@ -262,30 +273,26 @@ async function main() {
     { kode: "POLIO1", tgl: "2026-03-10" },
   ];
 
-  for (const im of imunisasiAwal) {
-    await prisma.imunisasiBalita.upsert({
-      where: {
-        balitaId_vaksinId_dosisKe: {
-          balitaId: balita.id,
-          vaksinId: vaksinMap[im.kode].id,
-          dosisKe: 1,
-        },
-      },
-      update: {},
-      create: {
-        tanggal: tanggal(im.tgl),
-        dosisKe: 1,
-        balitaId: balita.id,
-        vaksinId: vaksinMap[im.kode].id,
-        petugasId: kader.id,
-      },
-    });
-  }
-
-  const sudahAdaSuplemen = await prisma.pemberianSuplemen.count({
-    where: { balitaId: balita.id },
+  await prisma.imunisasiBalita.createMany({
+    data: imunisasiAwal.map((im) => ({
+      tanggal: tanggal(im.tgl),
+      dosisKe: 1,
+      balitaId: balita.id,
+      vaksinId: vaksinMap[im.kode].id,
+      petugasId: kader.id,
+    })),
+    skipDuplicates: true,
   });
-  if (sudahAdaSuplemen === 0) {
+
+  const suplemenContoh = await prisma.pemberianSuplemen.findFirst({
+    where: {
+      balitaId: balita.id,
+      kegiatanId: kegiatan.id,
+      jenis: "PMT",
+    },
+    select: { id: true },
+  });
+  if (!suplemenContoh) {
     await prisma.pemberianSuplemen.create({
       data: {
         jenis: "PMT",
@@ -301,9 +308,12 @@ async function main() {
   // ---------------------------------------------------
   // 9. LAYANAN IBU HAMIL
   // ---------------------------------------------------
-  // Contoh kehamilan baru untuk ibu yang sama (anak ke-2)
+  // Cari berdasarkan identitas kehamilan contoh, bukan kehamilan aktif apa pun.
   let kehamilan = await prisma.kehamilan.findFirst({
-    where: { ibuId: ibu.id, status: "AKTIF" },
+    where: {
+      ibuId: ibu.id,
+      hpht: tanggal("2026-06-15"),
+    },
   });
 
   if (!kehamilan) {
@@ -320,10 +330,14 @@ async function main() {
     });
   }
 
-  const sudahAdaPemeriksaanHamil = await prisma.pemeriksaanKehamilan.count({
-    where: { kehamilanId: kehamilan.id },
+  const pemeriksaanHamilContoh = await prisma.pemeriksaanKehamilan.findFirst({
+    where: {
+      kehamilanId: kehamilan.id,
+      tanggal: tanggal("2026-10-01"),
+    },
+    select: { id: true },
   });
-  if (sudahAdaPemeriksaanHamil === 0) {
+  if (!pemeriksaanHamilContoh) {
     await prisma.pemeriksaanKehamilan.create({
       data: {
         tanggal: tanggal("2026-10-01"),
@@ -347,10 +361,14 @@ async function main() {
   // ---------------------------------------------------
   // 10. LAYANAN LANSIA
   // ---------------------------------------------------
-  const sudahAdaPemeriksaanLansia = await prisma.pemeriksaanLansia.count({
-    where: { wargaId: lansia.id },
+  const pemeriksaanLansiaContoh = await prisma.pemeriksaanLansia.findFirst({
+    where: {
+      wargaId: lansia.id,
+      tanggal: tanggal("2026-10-01"),
+    },
+    select: { id: true },
   });
-  if (sudahAdaPemeriksaanLansia === 0) {
+  if (!pemeriksaanLansiaContoh) {
     await prisma.pemeriksaanLansia.create({
       data: {
         tanggal: tanggal("2026-10-01"),
@@ -377,11 +395,11 @@ async function main() {
   console.log("   - warga@posyandu.test");
 }
 
-main()
-  .catch((e) => {
-    console.error("❌ Seeding gagal:", e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+try {
+  await main();
+} catch (error) {
+  console.error("❌ Seeding gagal:", error);
+  process.exitCode = 1;
+} finally {
+  await prisma.$disconnect();
+}

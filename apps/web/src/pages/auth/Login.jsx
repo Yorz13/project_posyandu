@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { HiOutlineMail, HiOutlineLockClosed } from 'react-icons/hi';
-import { useAuth } from '../context/AuthContext';
-import AuthLayout from '../components/AuthLayout';
-import FormField, { PasswordToggle } from '../components/FormField';
+import { useAuth } from '../../context/useAuth';
+import AuthLayout from '../../components/AuthLayout';
+import FormField, { PasswordToggle } from '../../components/FormField';
+import { HOME_BY_ROLE } from '../../utils/roles';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const from = location.state?.from?.pathname || '/';
+  const from = location.state?.from?.pathname;
   const justRegistered = Boolean(location.state?.registered);
 
   const handleChange = (e) => {
@@ -32,10 +33,13 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      await login(formData.email, formData.password);
-      navigate(from, { replace: true });
+      const user = await login(formData.email, formData.password);
+      navigate(from || HOME_BY_ROLE[user.role] || '/', { replace: true });
     } catch (error) {
-      const message = error?.response?.data?.message || 'Gagal masuk. Periksa kembali email dan kata sandi Anda.';
+      const message = error?.response?.data?.message
+        || (error?.request
+          ? 'Server API tidak dapat dihubungi. Pastikan API sedang berjalan.'
+          : 'Gagal masuk. Periksa kembali email dan kata sandi Anda.');
       setErrorMessage(message);
     } finally {
       setIsLoading(false);
@@ -57,7 +61,7 @@ const Login = () => {
     >
       {justRegistered && !errorMessage && (
         <div role="status" className="mb-6 rounded-xl border border-teal-200 bg-teal-50 p-4 text-sm text-teal-800">
-          Akun berhasil dibuat. Silakan masuk dengan email dan kata sandi Anda.
+          Pendaftaran berhasil dikirim. Kader akan memeriksa identitas Anda; akun bisa digunakan setelah diverifikasi.
         </div>
       )}
 
@@ -70,6 +74,7 @@ const Login = () => {
       <form onSubmit={handleSubmit} className="space-y-5">
         <FormField
           id="email"
+          name="email"
           label="Alamat email"
           icon={HiOutlineMail}
           type="email"
@@ -82,6 +87,7 @@ const Login = () => {
 
         <FormField
           id="password"
+          name="password"
           label="Kata sandi"
           icon={HiOutlineLockClosed}
           type={showPassword ? 'text' : 'password'}
@@ -102,8 +108,8 @@ const Login = () => {
             />
             <span>Ingat saya</span>
           </label>
-          <Link to="/forgot-password" className="font-medium text-teal-700 transition-colors hover:text-teal-800 hover:underline">
-            Lupa sandi?
+          <Link to="/kontak" className="font-medium text-teal-700 transition-colors hover:text-teal-800 hover:underline">
+            Butuh bantuan masuk?
           </Link>
         </div>
 
