@@ -17,10 +17,7 @@ export const AuthProvider = ({ children }) => {
 
       if (token) {
         try {
-          // Validasi token ke backend dan ambil data user terbaru
-          // const userData = await AuthService.getCurrentUser(); // <-- Buka komen ini jika API backend sudah siap
 
-          // Simulasi jika backend belum siap (ambil dari localStorage sementara)
           const savedUser = JSON.parse(localStorage.getItem('user'));
           setUser(savedUser);
           setIsAuthenticated(true);
