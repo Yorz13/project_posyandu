@@ -1,7 +1,7 @@
 // src/layouts/KaderLayout.jsx
 import { Outlet } from 'react-router-dom';
-import SidebarKader from '../components/kader/SidebarKader';
-import { useAuth } from '../context/AuthContext';
+import SidebarKader from '../components/SidebarKader';
+import { useAuth } from '../context/useAuth';
 
 export default function KaderLayout() {
   const { user } = useAuth();

@@ -1,7 +1,7 @@
-// src/components/kader/SidebarKader.jsx
-import { NavLink } from 'react-router-dom';
+// src/components/SidebarKader.jsx
+import { NavLink, useNavigate } from 'react-router-dom';
 import { FiHome, FiUsers, FiClipboard, FiShield, FiMonitor, FiFileText, FiLogOut } from 'react-icons/fi';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 
 // Kader: tambah/ubah data warga (balita, pemeriksaan, imunisasi) + monitoring.
 // Tidak ada menu Data Kader / Pengguna.
@@ -16,6 +16,12 @@ const menuKader = [
 
 export default function SidebarKader() {
   const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/login', { replace: true });
+  };
 
   return (
     <aside className="w-64 min-h-screen bg-[#11182B] text-white flex flex-col">
@@ -34,7 +40,7 @@ export default function SidebarKader() {
         ))}
       </nav>
 
-      <button onClick={logout} className="m-4 flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm text-white/70 hover:bg-white/10">
+      <button type="button" onClick={handleLogout} className="m-4 flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm text-white/70 hover:bg-white/10">
         <FiLogOut /> Logout
       </button>
     </aside>
