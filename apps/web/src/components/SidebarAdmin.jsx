@@ -24,26 +24,48 @@ export default function SidebarAdmin() {
   };
 
   return (
-    <aside className="w-64 min-h-screen bg-[#11182B] text-white flex flex-col">
-      <div className="px-6 py-6 text-sm font-bold leading-tight">
-        POSYANDU
-        <br />
-        RW 8
+    <aside className="flex h-full w-64 flex-col overflow-y-auto border-r-4 border-black bg-white text-black">
+      <div className="border-b-4 border-black p-5">
+        <div className="inline-block -rotate-2 border-4 border-black bg-teal-400 px-3 py-2 text-sm font-black uppercase leading-tight tracking-wide shadow-[4px_4px_0_0_#000]">
+          POSYANDU
+          <br />
+          RW 8
+        </div>
       </div>
 
-      <nav className="flex-1 px-4 space-y-1">
+      <nav className="flex-1 space-y-3 p-4">
         {menuAdmin.map(({ label, path, icon: Icon, readOnly }) => (
-          <NavLink key={path} to={path} className={({ isActive }) => `flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-colors ${isActive ? 'bg-[#2563EB]' : 'text-white/70 hover:bg-white/10'}`}>
-            <Icon className="shrink-0" />
+          <NavLink
+            key={path}
+            to={path}
+            className={({ isActive }) =>
+              `flex items-center gap-3 border-4 border-black px-3 py-2.5 text-sm font-black uppercase tracking-wide transition-all focus:outline-none focus-visible:ring-4 focus-visible:ring-pink-400 ${
+                isActive
+                  ? 'translate-x-0.5 translate-y-0.5 bg-yellow-300 shadow-[2px_2px_0_0_#000]'
+                  : 'bg-white shadow-[4px_4px_0_0_#000] hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-sky-200 hover:shadow-[2px_2px_0_0_#000] active:translate-x-1 active:translate-y-1 active:shadow-none'
+              }`
+            }
+          >
+            <Icon className="shrink-0" aria-hidden="true" />
             <span className="flex-1">{label}</span>
-            {readOnly && <span className="text-[10px] text-white/40">Lihat</span>}
+            {readOnly && (
+              <span className="border-2 border-black bg-lime-300 px-1.5 py-0.5 text-[10px] font-black leading-none">
+                Lihat
+              </span>
+            )}
           </NavLink>
         ))}
       </nav>
 
-      <button type="button" onClick={handleLogout} className="m-4 flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm text-white/70 hover:bg-white/10">
-        <FiLogOut /> Logout
-      </button>
+      <div className="border-t-4 border-black p-4">
+        <button
+          type="button"
+          onClick={handleLogout}
+          className="flex w-full cursor-pointer items-center justify-center gap-3 border-4 border-black bg-pink-400 px-3 py-2.5 text-sm font-black uppercase tracking-wide shadow-[4px_4px_0_0_#000] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-pink-300 hover:shadow-[2px_2px_0_0_#000] active:translate-x-1 active:translate-y-1 active:shadow-none focus:outline-none focus-visible:ring-4 focus-visible:ring-yellow-300"
+        >
+          <FiLogOut aria-hidden="true" /> Logout
+        </button>
+      </div>
     </aside>
   );
 }

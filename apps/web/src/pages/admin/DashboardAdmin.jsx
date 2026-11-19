@@ -10,10 +10,10 @@ import {
 
 // ===== Data contoh. Ganti dengan data dari API =====
 const stats = [
-  { label: 'Total balita', value: 128, note: '+6 balita baru bulan ini', icon: HiOutlineUserGroup, tone: 'bg-teal-50 text-teal-700' },
-  { label: 'Ibu hamil', value: 24, note: '3 perlu kontrol minggu ini', icon: HiOutlineHeart, tone: 'bg-rose-50 text-rose-600' },
-  { label: 'Kunjungan bulan ini', value: 94, note: '+8% dari bulan lalu', icon: HiOutlineClipboardCheck, tone: 'bg-sky-50 text-sky-700' },
-  { label: 'Menunggu verifikasi', value: 5, note: 'Akun baru perlu diperiksa', icon: HiOutlineShieldCheck, tone: 'bg-amber-50 text-amber-700' },
+  { label: 'Total balita', value: 128, note: '+6 balita baru bulan ini', icon: HiOutlineUserGroup, tone: 'bg-teal-300' },
+  { label: 'Ibu hamil', value: 24, note: '3 perlu kontrol minggu ini', icon: HiOutlineHeart, tone: 'bg-pink-300' },
+  { label: 'Kunjungan bulan ini', value: 94, note: '+8% dari bulan lalu', icon: HiOutlineClipboardCheck, tone: 'bg-sky-300' },
+  { label: 'Menunggu verifikasi', value: 5, note: 'Akun baru perlu diperiksa', icon: HiOutlineShieldCheck, tone: 'bg-yellow-300' },
 ];
 
 const kunjungan = [
@@ -26,9 +26,9 @@ const kunjungan = [
 ];
 
 const statusGizi = [
-  { label: 'Gizi baik', jumlah: 104, bar: 'bg-emerald-500' },
-  { label: 'Berisiko gizi kurang', jumlah: 14, bar: 'bg-amber-400' },
-  { label: 'Gizi kurang', jumlah: 7, bar: 'bg-orange-500' },
+  { label: 'Gizi baik', jumlah: 104, bar: 'bg-lime-400' },
+  { label: 'Berisiko gizi kurang', jumlah: 14, bar: 'bg-yellow-300' },
+  { label: 'Gizi kurang', jumlah: 7, bar: 'bg-orange-400' },
   { label: 'Gizi buruk', jumlah: 3, bar: 'bg-red-500' },
 ];
 
@@ -51,9 +51,13 @@ const aktivitas = [
   { teks: 'Laporan bulanan September diekspor', waktu: '2 hari lalu' },
 ];
 
-const card = 'rounded-2xl border border-slate-200 bg-white p-6 shadow-sm';
+const card = 'border-4 border-black bg-white p-6 shadow-[8px_8px_0_0_#000]';
+
+const cardTitle =
+  'inline-block border-4 border-black bg-yellow-300 px-3 py-1 text-sm font-black uppercase tracking-wide text-black shadow-[3px_3px_0_0_#000]';
+
 const linkButton =
-  'text-sm font-medium text-teal-700 transition-colors hover:text-teal-800 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 focus-visible:ring-offset-2 rounded';
+  'cursor-pointer border-2 border-black bg-white px-2 py-1 text-xs font-black uppercase text-black shadow-[3px_3px_0_0_#000] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-pink-300 hover:shadow-[1px_1px_0_0_#000] active:translate-x-1 active:translate-y-1 active:shadow-none focus:outline-none focus-visible:ring-4 focus-visible:ring-pink-400';
 
 const DashboardAdmin = () => {
   const maxKunjungan = Math.max(...kunjungan.map((k) => k.jumlah));
@@ -68,26 +72,33 @@ const DashboardAdmin = () => {
   return (
     <div className="space-y-8">
       {/* Judul halaman */}
-      <header className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+      <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">Dashboard Admin</h1>
-          <p className="mt-1 text-sm text-slate-600">Ringkasan kegiatan Posyandu RW 08.</p>
+          <h1 className="inline-block border-4 border-black bg-teal-400 px-4 py-2 text-2xl font-black uppercase tracking-tight text-black shadow-[6px_6px_0_0_#000] sm:text-3xl">
+            Dashboard Admin
+          </h1>
+          <p className="mt-4 text-sm font-bold text-black">Ringkasan kegiatan Posyandu RW 08.</p>
         </div>
-        <p className="text-sm text-slate-500">{today}</p>
+        <p className="inline-block self-start border-4 border-black bg-white px-3 py-1.5 text-xs font-black uppercase text-black shadow-[4px_4px_0_0_#000] sm:self-auto">
+          {today}
+        </p>
       </header>
 
       {/* Statistik utama */}
-      <section aria-label="Statistik utama" className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <section aria-label="Statistik utama" className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
         {stats.map(({ label, value, note, icon: Icon, tone }) => (
-          <div key={label} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-            <div className="flex items-center justify-between">
-              <p className="text-sm font-medium text-slate-600">{label}</p>
-              <span className={`flex h-10 w-10 items-center justify-center rounded-xl ${tone}`}>
-                <Icon className="h-5 w-5" aria-hidden="true" />
+          <div
+            key={label}
+            className="border-4 border-black bg-white p-5 shadow-[6px_6px_0_0_#000] transition-all hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[9px_9px_0_0_#000]"
+          >
+            <div className="flex items-center justify-between gap-3">
+              <p className="text-xs font-black uppercase tracking-wider text-black">{label}</p>
+              <span className={`flex h-11 w-11 shrink-0 items-center justify-center border-4 border-black ${tone}`}>
+                <Icon className="h-5 w-5 text-black" aria-hidden="true" />
               </span>
             </div>
-            <p className="mt-3 text-3xl font-bold text-slate-900">{value.toLocaleString('id-ID')}</p>
-            <p className="mt-1 text-xs text-slate-500">{note}</p>
+            <p className="mt-3 text-4xl font-black text-black">{value.toLocaleString('id-ID')}</p>
+            <p className="mt-2 border-t-4 border-black pt-2 text-xs font-bold text-black">{note}</p>
           </div>
         ))}
       </section>
@@ -95,46 +106,54 @@ const DashboardAdmin = () => {
       {/* Grafik kunjungan + status gizi */}
       <section className="grid gap-6 lg:grid-cols-3">
         <div className={`${card} lg:col-span-2`}>
-          <h2 className="text-base font-semibold text-slate-900">Kunjungan 6 bulan terakhir</h2>
-          <p className="text-sm text-slate-500">Jumlah balita dan ibu hamil yang datang ke posyandu.</p>
+          <h2 className={cardTitle}>Kunjungan 6 bulan terakhir</h2>
+          <p className="mt-3 text-sm font-bold text-black">Jumlah balita dan ibu hamil yang datang ke posyandu.</p>
 
           <div
             role="img"
             aria-label={`Grafik kunjungan: ${kunjungan.map((k) => `${k.bulan} ${k.jumlah}`).join(', ')}`}
-            className="mt-6 flex items-end gap-3 sm:gap-5"
+            className="mt-6 flex items-end gap-3 border-b-4 border-black sm:gap-5"
           >
             {kunjungan.map((k, index) => (
               <div key={k.bulan} className="flex flex-1 flex-col items-center gap-2">
-                <span className="text-xs font-semibold text-slate-700">{k.jumlah}</span>
+                <span className="text-xs font-black text-black">{k.jumlah}</span>
                 <div className="flex h-40 w-full items-end justify-center">
                   <div
-                    className={`w-full max-w-14 rounded-t-lg ${index === kunjungan.length - 1 ? 'bg-teal-600' : 'bg-teal-200'}`}
+                    className={`w-full max-w-14 border-4 border-b-0 border-black ${
+                      index === kunjungan.length - 1 ? 'bg-pink-400' : 'bg-teal-300'
+                    }`}
                     style={{ height: `${(k.jumlah / maxKunjungan) * 100}%` }}
                   />
                 </div>
-                <span className="text-xs text-slate-500">{k.bulan}</span>
               </div>
+            ))}
+          </div>
+          <div className="mt-2 flex gap-3 sm:gap-5">
+            {kunjungan.map((k) => (
+              <span key={k.bulan} className="flex-1 text-center text-xs font-black uppercase text-black">
+                {k.bulan}
+              </span>
             ))}
           </div>
         </div>
 
         <div className={card}>
-          <h2 className="text-base font-semibold text-slate-900">Status gizi balita</h2>
-          <p className="text-sm text-slate-500">Dari {totalGizi} balita terdata.</p>
+          <h2 className={cardTitle}>Status gizi balita</h2>
+          <p className="mt-3 text-sm font-bold text-black">Dari {totalGizi} balita terdata.</p>
 
-          <ul className="mt-6 space-y-4">
+          <ul className="mt-6 space-y-5">
             {statusGizi.map((g) => {
               const persen = Math.round((g.jumlah / totalGizi) * 100);
               return (
                 <li key={g.label}>
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-slate-700">{g.label}</span>
-                    <span className="font-semibold text-slate-900">
-                      {g.jumlah} <span className="font-normal text-slate-500">({persen}%)</span>
+                    <span className="font-bold text-black">{g.label}</span>
+                    <span className="font-black text-black">
+                      {g.jumlah} <span className="font-bold">({persen}%)</span>
                     </span>
                   </div>
-                  <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-slate-100">
-                    <div className={`h-full rounded-full ${g.bar}`} style={{ width: `${persen}%` }} />
+                  <div className="mt-1.5 h-5 overflow-hidden border-4 border-black bg-white">
+                    <div className={`h-full border-r-4 border-black ${g.bar}`} style={{ width: `${persen}%` }} />
                   </div>
                 </li>
               );
@@ -146,25 +165,25 @@ const DashboardAdmin = () => {
       {/* Jadwal, verifikasi, aktivitas */}
       <section className="grid gap-6 lg:grid-cols-3">
         <div className={card}>
-          <div className="flex items-center justify-between">
-            <h2 className="text-base font-semibold text-slate-900">Jadwal mendatang</h2>
+          <div className="flex items-center justify-between gap-2">
+            <h2 className={cardTitle}>Jadwal mendatang</h2>
             <button type="button" className={linkButton}>Lihat semua</button>
           </div>
 
-          <ul className="mt-5 space-y-5">
+          <ul className="mt-6 space-y-4">
             {jadwal.map((j) => (
-              <li key={j.judul} className="border-l-2 border-teal-500 pl-4">
-                <p className="text-sm font-semibold text-slate-900">{j.judul}</p>
-                <p className="mt-1 flex items-center gap-1.5 text-xs text-slate-600">
-                  <HiOutlineCalendar className="h-4 w-4 text-slate-400" aria-hidden="true" />
+              <li key={j.judul} className="border-4 border-black bg-sky-200 p-3 shadow-[4px_4px_0_0_#000]">
+                <p className="text-sm font-black uppercase text-black">{j.judul}</p>
+                <p className="mt-2 flex items-center gap-1.5 text-xs font-bold text-black">
+                  <HiOutlineCalendar className="h-4 w-4" aria-hidden="true" />
                   {j.tanggal}
                 </p>
-                <p className="mt-1 flex items-center gap-1.5 text-xs text-slate-600">
-                  <HiOutlineClock className="h-4 w-4 text-slate-400" aria-hidden="true" />
+                <p className="mt-1 flex items-center gap-1.5 text-xs font-bold text-black">
+                  <HiOutlineClock className="h-4 w-4" aria-hidden="true" />
                   {j.jam}
                 </p>
-                <p className="mt-1 flex items-center gap-1.5 text-xs text-slate-600">
-                  <HiOutlineLocationMarker className="h-4 w-4 text-slate-400" aria-hidden="true" />
+                <p className="mt-1 flex items-center gap-1.5 text-xs font-bold text-black">
+                  <HiOutlineLocationMarker className="h-4 w-4" aria-hidden="true" />
                   {j.tempat}
                 </p>
               </li>
@@ -173,27 +192,30 @@ const DashboardAdmin = () => {
         </div>
 
         <div className={card}>
-          <div className="flex items-center justify-between">
-            <h2 className="text-base font-semibold text-slate-900">Menunggu verifikasi</h2>
+          <div className="flex items-center justify-between gap-2">
+            <h2 className={cardTitle}>Menunggu verifikasi</h2>
             <button type="button" className={linkButton}>Lihat semua</button>
           </div>
 
-          <ul className="mt-5 divide-y divide-slate-100">
+          <ul className="mt-6 space-y-4">
             {verifikasi.map((v) => (
-              <li key={v.nama} className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
+              <li
+                key={v.nama}
+                className="flex items-center gap-3 border-4 border-black bg-white p-3 shadow-[4px_4px_0_0_#000]"
+              >
                 <span
-                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-teal-100 text-sm font-semibold text-teal-800"
+                  className="flex h-11 w-11 shrink-0 items-center justify-center border-4 border-black bg-pink-300 text-base font-black text-black"
                   aria-hidden="true"
                 >
                   {v.nama.charAt(0)}
                 </span>
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-semibold text-slate-900">{v.nama}</p>
-                  <p className="text-xs text-slate-500">{v.peran} · {v.waktu}</p>
+                  <p className="truncate text-sm font-black text-black">{v.nama}</p>
+                  <p className="text-xs font-bold text-black">{v.peran} · {v.waktu}</p>
                 </div>
                 <button
                   type="button"
-                  className="rounded-lg border border-teal-600 px-3 py-1.5 text-xs font-semibold text-teal-700 transition-colors hover:bg-teal-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 focus-visible:ring-offset-2"
+                  className="cursor-pointer border-4 border-black bg-teal-400 px-2.5 py-1 text-xs font-black uppercase text-black shadow-[3px_3px_0_0_#000] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-teal-300 hover:shadow-[1px_1px_0_0_#000] active:translate-x-1 active:translate-y-1 active:shadow-none focus:outline-none focus-visible:ring-4 focus-visible:ring-pink-400"
                 >
                   Periksa
                 </button>
@@ -203,15 +225,20 @@ const DashboardAdmin = () => {
         </div>
 
         <div className={card}>
-          <h2 className="text-base font-semibold text-slate-900">Aktivitas terbaru</h2>
+          <h2 className={cardTitle}>Aktivitas terbaru</h2>
 
-          <ul className="mt-5 space-y-5">
-            {aktivitas.map((a) => (
+          <ul className="mt-6 space-y-4">
+            {aktivitas.map((a, index) => (
               <li key={a.teks} className="flex gap-3">
-                <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-teal-500" aria-hidden="true" />
+                <span
+                  className={`mt-1 h-4 w-4 shrink-0 border-2 border-black ${
+                    ['bg-pink-400', 'bg-teal-400', 'bg-yellow-300', 'bg-sky-300'][index % 4]
+                  }`}
+                  aria-hidden="true"
+                />
                 <div>
-                  <p className="text-sm text-slate-800">{a.teks}</p>
-                  <p className="mt-0.5 text-xs text-slate-500">{a.waktu}</p>
+                  <p className="text-sm font-bold text-black">{a.teks}</p>
+                  <p className="mt-0.5 text-xs font-semibold text-slate-700">{a.waktu}</p>
                 </div>
               </li>
             ))}

@@ -1,24 +1,26 @@
-// src/layouts/AdminLayout.jsx
+// src/layouts/LayoutAdmin.jsx
 import { Outlet } from 'react-router-dom';
 import SidebarAdmin from '../components/SidebarAdmin';
-import { useAuth } from '../context/useAuth';
+import HeaderAdmin from '../components/HeaderAdmin';
 
 export default function AdminLayout() {
-  const { user } = useAuth();
-
   return (
-    <div className="flex min-h-screen bg-slate-50">
-      <SidebarAdmin />
+    <div
+      className="flex min-h-screen bg-yellow-100"
+      style={{
+        backgroundImage: 'radial-gradient(#000 1px, transparent 1px)',
+        backgroundSize: '24px 24px',
+      }}
+    >
+      {/* Sidebar: menempel di layar, tinggi tetap 1 layar */}
+      <div className="sticky top-0 h-screen shrink-0 self-start">
+        <SidebarAdmin />
+      </div>
 
-      <div className="flex-1 flex flex-col min-w-0">
-        <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-end px-6">
-          <div className="text-right leading-tight">
-            <p className="text-sm font-semibold text-slate-800">{user?.name ?? 'Admin'}</p>
-            <p className="text-xs text-slate-500">Admin Posyandu</p>
-          </div>
-        </header>
+      <div className="flex min-w-0 flex-1 flex-col">
+        <HeaderAdmin />
 
-        <main className="flex-1 p-6 overflow-x-auto">
+        <main className="flex-1 overflow-x-auto p-6 lg:p-8">
           <Outlet />
         </main>
       </div>
