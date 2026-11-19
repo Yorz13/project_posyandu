@@ -16,27 +16,35 @@ const AppRoute = () => {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Auth */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/*" element={<Navigate to="/login" replace />} />
 
-<Route element={<ProtectedRoute allowedRoles={['Masyarakat']} />}>
-  <Route path="/warga/*" element={<LayoutWarga />}>
-    <Route path="*" element={<WargaRoute />} />
-  </Route>
-</Route>
+        {/* Protected: Masyarakat */}
+        <Route element={<ProtectedRoute allowedRoles={['Masyarakat']} />}>
+          <Route path="/warga/*" element={<LayoutWarga />}>
+            <Route path="*" element={<WargaRoute />} />
+          </Route>
+        </Route>
 
-<Route element={<ProtectedRoute allowedRoles={['KADER']} />}>
-  <Route path="/kader/*" element={<LayoutKader />}>
-    <Route path="*" element={<KaderRoute />} />
-  </Route>
-</Route>
+        {/* Protected: Kader */}
+        <Route element={<ProtectedRoute allowedRoles={['KADER']} />}>
+          <Route path="/kader/*" element={<LayoutKader />}>
+            <Route path="*" element={<KaderRoute />} />
+          </Route>
+        </Route>
 
-<Route element={<ProtectedRoute allowedRoles={['ADMIN']} />}>
-  <Route path="/admin/*" element={<LayoutAdmin />}>
-    <Route path="*" element={<AdminRoute />} />
-  </Route>
-</Route>
+        {/* Protected: Admin */}
+        <Route element={<ProtectedRoute allowedRoles={['ADMIN']} />}>
+          <Route path="/admin/*" element={<LayoutAdmin />}>
+            <Route path="*" element={<AdminRoute />} />
+          </Route>
+        </Route>
+
+        {/* Public (Beranda, Layanan, dll) - harus paling bawah sebagai catch-all */}
+        <Route path="/*" element={<LayoutPublik />}>
+          <Route path="*" element={<PublicRoute />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );
