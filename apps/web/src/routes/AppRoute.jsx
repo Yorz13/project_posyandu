@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
+import ProtectedRoute from '../components/ProtectedRoute';
 
 import Login from '../pages/auth/Login';
 import Register from '../pages/auth/Register';
@@ -19,21 +20,23 @@ const AppRoute = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/*" element={<Navigate to="/login" replace />} />
 
-        <Route path="/admin/*" element={<LayoutAdmin />}>
-          <Route path="*" element={<AdminRoute />} />
-        </Route>
+<Route element={<ProtectedRoute allowedRoles={['Masyarakat']} />}>
+  <Route path="/warga/*" element={<LayoutWarga />}>
+    <Route path="*" element={<WargaRoute />} />
+  </Route>
+</Route>
 
-        <Route path="/*" element={<LayoutPublik />}>
-          <Route path="*" element={<PublicRoute />} />
-        </Route>
+<Route element={<ProtectedRoute allowedRoles={['KADER']} />}>
+  <Route path="/kader/*" element={<LayoutKader />}>
+    <Route path="*" element={<KaderRoute />} />
+  </Route>
+</Route>
 
-        <Route path="/kader/*" element={<LayoutKader />}>
-          <Route path="*" element={<KaderRoute />} />
-        </Route>
-
-        <Route path="/warga/*" element={<LayoutWarga />}>
-          <Route path="*" element={<WargaRoute />} />
-        </Route>
+<Route element={<ProtectedRoute allowedRoles={['ADMIN']} />}>
+  <Route path="/admin/*" element={<LayoutAdmin />}>
+    <Route path="*" element={<AdminRoute />} />
+  </Route>
+</Route>
       </Routes>
     </BrowserRouter>
   );

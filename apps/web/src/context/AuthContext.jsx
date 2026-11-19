@@ -34,10 +34,10 @@ export function AuthProvider({ children }) {
 
   const register = (payload) => AuthService.register(payload);
 
-  const logout = () => {
-    AuthService.logout();
-    setUser(null);
-  };
+     const logout = () => {
+     localStorage.removeItem('token');
+     setUser(null);
+   };
 
   return (
     <AuthContext.Provider value={{ user, loading, isAuthenticated: Boolean(user), login, register, logout }}>
