@@ -1,24 +1,27 @@
 // src/layouts/LayoutWarga.jsx
 import { Outlet } from 'react-router-dom';
 import SidebarWarga from '../components/SidebarWarga';
-import { useAuth } from '../context/useAuth';
+import HeaderWarga from '../components/HeaderWarga';
 
 const LayoutWarga = () => {
-  const { user } = useAuth();
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
-      <SidebarWarga />
+     <div
+      className="flex min-h-screen bg-yellow-100"
+      style={{
+        backgroundImage: 'radial-gradient(#000 1px, transparent 1px)',
+        backgroundSize: '24px 24px',
+      }}
+    >
+      {/* Sidebar: menempel di layar, tinggi tetap 1 layar */}
+      <div className="sticky top-0 h-screen shrink-0 self-start">
+        <SidebarWarga />
+      </div>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="flex h-16 items-center justify-end border-b border-slate-200 bg-white px-6">
-          <div className="text-right leading-tight">
-            <p className="text-sm font-semibold text-slate-800">{user?.name ?? 'Warga'}</p>
-            <p className="text-xs text-slate-500">Warga RW 08</p>
-          </div>
-        </header>
+        <HeaderWarga />
 
-        <main className="flex-1 overflow-x-auto p-6">
+        <main className="flex-1 overflow-x-auto p-6 lg:p-8">
           <Outlet />
         </main>
       </div>

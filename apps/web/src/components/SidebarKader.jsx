@@ -4,7 +4,7 @@ import { FiHome, FiUsers, FiClipboard, FiShield, FiMonitor, FiFileText, FiLogOut
 import { useAuth } from '../context/useAuth';
 
 // Kader: tambah/ubah data warga (balita, pemeriksaan, imunisasi) + monitoring.
-// Tidak ada menu Data Kader / Pengguna.
+// Tidak ada menu Data Kader / Pengguna, dan tidak ada label LIHAT karena kader bisa mengubah data.
 const menuKader = [
   { label: 'Dashboard', path: '/kader/dashboard', icon: FiHome },
   { label: 'Data Balita', path: '/kader/balita', icon: FiUsers },
@@ -13,6 +13,10 @@ const menuKader = [
   { label: 'Monitoring', path: '/kader/monitoring', icon: FiMonitor },
   { label: 'Laporan', path: '/kader/laporan', icon: FiFileText },
 ];
+
+const focusRing = 'focus:outline-none focus-visible:ring-4 focus-visible:ring-pink-400';
+
+const itemBase = `flex items-center gap-3 border-4 border-black px-4 py-3 text-sm font-black uppercase text-black shadow-[4px_4px_0_0_#000] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0_0_#000] active:translate-x-1 active:translate-y-1 active:shadow-none ${focusRing}`;
 
 export default function SidebarKader() {
   const { logout } = useAuth();
@@ -24,25 +28,41 @@ export default function SidebarKader() {
   };
 
   return (
-    <aside className="w-64 min-h-screen bg-[#11182B] text-white flex flex-col">
-      <div className="px-6 py-6 text-sm font-bold leading-tight">
-        POSYANDU
-        <br />
-        RW 8
+    <aside className="flex min-h-screen w-72 shrink-0 flex-col border-r-4 border-black bg-white">
+      {/* Logo */}
+      <div className="border-b-4 border-black px-6 py-6">
+        <div className="inline-block -rotate-2 border-4 border-black bg-teal-400 px-4 py-2 text-base font-black uppercase leading-tight text-black shadow-[4px_4px_0_0_#000]">
+          Posyandu
+          <br />
+          RW 8
+        </div>
       </div>
 
-      <nav className="flex-1 px-4 space-y-1">
+      {/* Menu */}
+      <nav aria-label="Menu kader" className="flex-1 space-y-4 p-5">
         {menuKader.map(({ label, path, icon: Icon }) => (
-          <NavLink key={path} to={path} className={({ isActive }) => `flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-colors ${isActive ? 'bg-[#2563EB]' : 'text-white/70 hover:bg-white/10'}`}>
-            <Icon className="shrink-0" />
+          <NavLink
+            key={path}
+            to={path}
+            className={({ isActive }) => `${itemBase} ${isActive ? 'bg-yellow-300' : 'bg-white hover:bg-yellow-100'}`}
+          >
+            <Icon className="h-5 w-5 shrink-0" aria-hidden="true" />
             {label}
           </NavLink>
         ))}
       </nav>
 
-      <button type="button" onClick={handleLogout} className="m-4 flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm text-white/70 hover:bg-white/10">
-        <FiLogOut /> Logout
-      </button>
+      {/* Logout */}
+      <div className="border-t-4 border-black p-5">
+        <button
+          type="button"
+          onClick={handleLogout}
+          className={`${itemBase} w-full cursor-pointer justify-center bg-pink-400 hover:bg-pink-300`}
+        >
+          <FiLogOut className="h-5 w-5 shrink-0" aria-hidden="true" />
+          Logout
+        </button>
+      </div>
     </aside>
   );
 }

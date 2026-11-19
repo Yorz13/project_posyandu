@@ -1,16 +1,18 @@
 // src/routes/WargaRoute.jsx
 import { Routes, Route, Navigate } from 'react-router-dom';
 import DashboardWarga from '../pages/warga/DashboardWarga';
+import DataAnak from '../pages/warga/DataAnak';
+import RiwayatImunisasi from '../pages/warga/RiwayatImunisasi';
+import RiwayatPemeriksaan from '../pages/warga/RiwayatPemeriksaan';
 
 const WargaRoute = () => {
   return (
     <Routes>
       <Route index element={<Navigate to="dashboard" replace />} />
       <Route path="dashboard" element={<DashboardWarga />} />
-      {/* Tambahkan halaman lain di sini setelah dibuat:
       <Route path="anak" element={<DataAnak />} />
+      <Route path="imunisasi" element={<RiwayatImunisasi />} />
       <Route path="pemeriksaan" element={<RiwayatPemeriksaan />} />
-      <Route path="imunisasi" element={<RiwayatImunisasi />} /> */}
       <Route path="*" element={<Navigate to="dashboard" replace />} />
     </Routes>
   );
