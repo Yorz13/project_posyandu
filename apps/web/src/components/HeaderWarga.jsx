@@ -1,7 +1,7 @@
-// src/components/HeaderKader.jsx
+// src/components/HeaderWarga.jsx
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FiSearch, FiChevronDown, FiHome, FiLogOut } from 'react-icons/fi';
+import { FiSearch, FiChevronDown, FiHome, FiUser, FiLogOut } from 'react-icons/fi';
 import { useAuth } from '../context/useAuth';
 
 const HeaderWarga = ({ onSearch }) => {
@@ -13,6 +13,12 @@ const HeaderWarga = ({ onSearch }) => {
   const menuRef = useRef(null);
 
   const name = user?.name ?? 'Warga';
+  const apiUrl = import.meta.env.VITE_API_URL ?? '';
+  const foto = user?.foto
+    ? /^(https?:|blob:|data:)/.test(user.foto)
+      ? user.foto
+      : `${apiUrl}${user.foto}`
+    : '';
 
   // Tutup dropdown saat klik di luar atau tekan Escape
   useEffect(() => {
@@ -50,15 +56,15 @@ const HeaderWarga = ({ onSearch }) => {
 
       {/* Tengah: pencarian */}
       <form onSubmit={handleSearch} role="search" className="flex w-full max-w-md flex-1 md:flex-none">
-        <label htmlFor="kader-search" className="sr-only">
+        <label htmlFor="warga-search" className="sr-only">
           Cari
         </label>
         <input
-          id="kader-search"
+          id="warga-search"
           type="search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Cari balita, pemeriksaan, imunisasi..."
+          placeholder="Cari anak, imunisasi, pemeriksaan..."
           className="min-w-0 flex-1 border-4 border-r-0 border-black bg-white px-3 py-2 text-sm font-bold text-black placeholder:font-medium placeholder:text-slate-500 focus:bg-yellow-100 focus:outline-none"
         />
         <button
@@ -82,10 +88,14 @@ const HeaderWarga = ({ onSearch }) => {
             className="flex cursor-pointer items-center gap-3 border-4 border-black bg-white py-1 pl-1 pr-3 shadow-[4px_4px_0_0_#000] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-yellow-100 hover:shadow-[2px_2px_0_0_#000] active:translate-x-1 active:translate-y-1 active:shadow-none focus:outline-none focus-visible:ring-4 focus-visible:ring-pink-400"
           >
             <span
-              className="flex h-9 w-9 items-center justify-center border-4 border-black bg-lime-300 text-sm font-black text-black"
+              className="flex h-9 w-9 items-center justify-center overflow-hidden border-4 border-black bg-orange-300 text-sm font-black text-black"
               aria-hidden="true"
             >
-              {name.charAt(0).toUpperCase()}
+              {foto ? (
+                <img src={foto} alt="" className="h-full w-full object-cover" />
+              ) : (
+                name.charAt(0).toUpperCase()
+              )}
             </span>
             <span className="hidden max-w-32 truncate text-sm font-black uppercase text-black sm:block">
               {name}
@@ -103,19 +113,19 @@ const HeaderWarga = ({ onSearch }) => {
             >
               <div className="border-b-4 border-black bg-sky-200 p-3">
                 <p className="truncate text-sm font-black uppercase text-black">{name}</p>
-                <p className="mt-1 inline-block border-2 border-black bg-lime-300 px-1.5 py-0.5 text-[10px] font-black uppercase leading-none text-black">
-                  Kader Posyandu
+                <p className="mt-1 inline-block border-2 border-black bg-orange-300 px-1.5 py-0.5 text-[10px] font-black uppercase leading-none text-black">
+                  Warga Posyandu
                 </p>
               </div>
 
               <div className="space-y-3 p-3">
                 <Link
-                  to="/kader/dashboard"
+                  to="/warga/profil"
                   role="menuitem"
                   onClick={() => setOpen(false)}
                   className="flex items-center gap-3 border-4 border-black bg-white px-3 py-2 text-sm font-black uppercase text-black shadow-[3px_3px_0_0_#000] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-sky-200 hover:shadow-[1px_1px_0_0_#000] focus:outline-none focus-visible:ring-4 focus-visible:ring-pink-400"
                 >
-                  <FiHome aria-hidden="true" /> Dashboard
+                  <FiUser aria-hidden="true" /> Profil
                 </Link>
 
                 <button

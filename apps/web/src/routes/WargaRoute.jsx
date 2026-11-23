@@ -4,6 +4,7 @@ import DashboardWarga from '../pages/warga/DashboardWarga';
 import DataAnak from '../pages/warga/DataAnak';
 import RiwayatImunisasi from '../pages/warga/RiwayatImunisasi';
 import RiwayatPemeriksaan from '../pages/warga/RiwayatPemeriksaan';
+import Profil from '../pages/warga/Profil';
 
 const WargaRoute = () => {
   return (
@@ -13,6 +14,7 @@ const WargaRoute = () => {
       <Route path="anak" element={<DataAnak />} />
       <Route path="imunisasi" element={<RiwayatImunisasi />} />
       <Route path="pemeriksaan" element={<RiwayatPemeriksaan />} />
+      <Route path="profil" element={<Profil />} />
       <Route path="*" element={<Navigate to="dashboard" replace />} />
     </Routes>
   );

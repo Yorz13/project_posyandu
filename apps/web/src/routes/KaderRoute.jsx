@@ -5,6 +5,7 @@ import Imunisasi from '../pages/kader/Imunisasi';
 import Laporan from '../pages/kader/Laporan';
 import Monitoring from '../pages/kader/Monitoring';
 import Pemeriksaan from '../pages/kader/Pemeriksaan';
+import Profil from '../pages/kader/Profil';
 
 const KaderRoute = () => {
   return (
@@ -16,6 +17,7 @@ const KaderRoute = () => {
       <Route path="laporan" element={<Laporan />} />
       <Route path="monitoring" element={<Monitoring />} />
       <Route path="pemeriksaan" element={<Pemeriksaan />} />
+      <Route path="profil" element={<Profil />} />
       <Route path="*" element={<Navigate to="dashboard" replace />} />
     </Routes>
   );

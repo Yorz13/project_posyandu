@@ -1,7 +1,7 @@
 // src/components/HeaderAdmin.jsx
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FiSearch, FiChevronDown, FiHome, FiLogOut } from 'react-icons/fi';
+import { FiSearch, FiChevronDown, FiUser, FiLogOut } from 'react-icons/fi';
 import { useAuth } from '../context/useAuth';
 
 const HeaderAdmin = ({ onSearch }) => {
@@ -13,6 +13,12 @@ const HeaderAdmin = ({ onSearch }) => {
   const menuRef = useRef(null);
 
   const name = user?.name ?? 'Admin';
+  const apiUrl = import.meta.env.VITE_API_URL ?? '';
+  const foto = user?.foto
+    ? /^(https?:|blob:|data:)/.test(user.foto)
+      ? user.foto
+      : `${apiUrl}${user.foto}`
+    : '';
 
   // Tutup dropdown saat klik di luar atau tekan Escape
   useEffect(() => {
@@ -82,10 +88,14 @@ const HeaderAdmin = ({ onSearch }) => {
             className="flex cursor-pointer items-center gap-3 border-4 border-black bg-white py-1 pl-1 pr-3 shadow-[4px_4px_0_0_#000] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-yellow-100 hover:shadow-[2px_2px_0_0_#000] active:translate-x-1 active:translate-y-1 active:shadow-none focus:outline-none focus-visible:ring-4 focus-visible:ring-pink-400"
           >
             <span
-              className="flex h-9 w-9 items-center justify-center border-4 border-black bg-pink-400 text-sm font-black text-black"
+              className="flex h-9 w-9 items-center justify-center overflow-hidden border-4 border-black bg-pink-400 text-sm font-black text-black"
               aria-hidden="true"
             >
-              {name.charAt(0).toUpperCase()}
+              {foto ? (
+                <img src={foto} alt="" className="h-full w-full object-cover" />
+              ) : (
+                name.charAt(0).toUpperCase()
+              )}
             </span>
             <span className="hidden max-w-32 truncate text-sm font-black uppercase text-black sm:block">
               {name}
@@ -110,12 +120,12 @@ const HeaderAdmin = ({ onSearch }) => {
 
               <div className="space-y-3 p-3">
                 <Link
-                  to="/admin/dashboard"
+                  to="/admin/profil"
                   role="menuitem"
                   onClick={() => setOpen(false)}
                   className="flex items-center gap-3 border-4 border-black bg-white px-3 py-2 text-sm font-black uppercase text-black shadow-[3px_3px_0_0_#000] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-sky-200 hover:shadow-[1px_1px_0_0_#000] focus:outline-none focus-visible:ring-4 focus-visible:ring-pink-400"
                 >
-                  <FiHome aria-hidden="true" /> Dashboard
+                  <FiUser aria-hidden="true" /> Profil
                 </Link>
 
                 <button

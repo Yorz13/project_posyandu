@@ -6,6 +6,7 @@ import Imunisasi from '../pages/admin/Imunisasi';
 import Laporan from '../pages/admin/Laporan';
 import Monitoring from '../pages/admin/Monitoring';
 import Pemeriksaan from '../pages/admin/Pemeriksaan';
+import Profil from '../pages/admin/Profil';
 
 const AdminRoute = () => {
   return (
@@ -18,6 +19,7 @@ const AdminRoute = () => {
       <Route path="laporan" element={<Laporan />} />
       <Route path="monitoring" element={<Monitoring />} />
       <Route path="pemeriksaan" element={<Pemeriksaan />} />
+      <Route path="profil" element={<Profil />} />
 
       <Route path="*" element={<Navigate to="dashboard" replace />} />
     </Routes>
